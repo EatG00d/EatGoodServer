@@ -12,26 +12,86 @@ namespace EatGoodNaija.Server.Services.Implementation
             _repository = repository;
         }
 
-        public async Task<List<OrderDto>> GetOrdersForCustomerAsync(string customerId, int page, int pageSize)
+        public async Task<ResponseDTO<List<OrderDto>>> GetOrdersForCustomerAsync(string customerId, int page, int pageSize)
         {
-            return await _repository.GetOrdersForCustomerAsync(customerId, page, pageSize);
+            var response = new ResponseDTO<List<OrderDto>>();
+            
+            try
+            {
+                if (string.IsNullOrEmpty(customerId))
+                {
+                    response.StatusCode = StatusCodes.Status400BadRequest;
+                    response.DisplayMessage = "Orders retrieved successfully";
+                    return response;
+                }
+
+                var orders = await _repository.GetOrdersForCustomerAsync(customerId, page, pageSize);
+                if (!orders.Any() || orders.Count == 0) 
+                {
+                    response.StatusCode = StatusCodes.Status404NotFound;
+                    response.DisplayMessage = "Input an order";
+                    response.Result = orders;
+                    return response;
+                }
+                response.StatusCode = StatusCodes.Status200OK;
+                response.DisplayMessage = "Orders retrieved successfully";
+                response.Result = orders;
+                return response;
+            }
+            catch (Exception ex)
+            {
+                response.StatusCode = StatusCodes.Status500InternalServerError;
+                response.DisplayMessage = "An error occurred while processing the request.";
+                response.ErrorMessage = new List<string> { ex.Message };
+                return response;
+            }
         }
 
-        public async Task<OrderDto> ReorderAsync(string customerId, string orderId)
+        public async Task<ResponseDTO<OrderDto>> ReorderAsync(string customerId, string orderId)
         {
-            var order = await _repository.ReorderAsync(customerId, orderId);
-            return new OrderDto
+            var response = new ResponseDTO<OrderDto>();
+            try
             {
-                Id = order.Id,
-                OrderDate = order.OrderDate,
-                Items = order.Items.Select(item => new CartItemDto
+                if (string.IsNullOrEmpty(customerId))
                 {
-                    Id = item.Id,
-                    FoodItemId = item.FoodItemId,
-                    Quantity = item.Quantity
-                }).ToList()
-            };
+                    response.StatusCode = StatusCodes.Status400BadRequest;
+                    response.DisplayMessage = "Customer ID is required.";
+                    return response;
+                }
+
+                var order = await _repository.ReorderAsync(customerId, orderId);
+
+                if (order == null)
+                {
+                    response.StatusCode = StatusCodes.Status404NotFound;
+                    response.DisplayMessage = "Order not found.";
+                    return response;
+                }
+
+                response.StatusCode = StatusCodes.Status200OK;
+                response.DisplayMessage = "Order reordered successfully";
+                response.Result = new OrderDto
+                {
+                    Id = order.Id,
+                    OrderDate = order.OrderDate,
+                    Items = order.Items.Select(item => new CartItemDto
+                    {
+                        Id = item.Id,
+                        FoodItemId = item.FoodItemId,
+                        Quantity = item.Quantity
+                    }).ToList()
+                };
+            }
+            catch (Exception ex)
+            {
+                response.StatusCode = StatusCodes.Status500InternalServerError;
+                response.DisplayMessage = "An error occurred while processing the request.";
+                response.ErrorMessage = new List<string> { ex.Message };
+            }
+
+            return response;
         }
+
     }
 
 }

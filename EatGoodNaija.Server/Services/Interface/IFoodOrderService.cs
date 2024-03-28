@@ -4,8 +4,8 @@ namespace EatGoodNaija.Server.Services.Interface
 {
     public interface IFoodOrderService
     {
-        Task<List<OrderDto>> GetOrdersForCustomerAsync(string customerId, int page, int pageSize);
-        Task<OrderDto> ReorderAsync(string customerId, string orderId);
+        Task<ResponseDTO<List<OrderDto>>> GetOrdersForCustomerAsync(string customerId, int page, int pageSize);
+        Task<ResponseDTO<OrderDto>> ReorderAsync(string customerId, string orderId);
     }
 
 }

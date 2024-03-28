@@ -21,43 +21,16 @@ namespace EatGoodNaija.Server.Controllers
         [HttpGet("{customerId}/orders")]
         public async Task<ActionResult<ResponseDTO<List<OrderDto>>>> GetOrdersForCustomerAsync(string customerId, int page = 1, int pageSize = 10)
         {
-            var response = new ResponseDTO<List<OrderDto>>();
-            try
-            {
-                var orders = await _service.GetOrdersForCustomerAsync(customerId, page, pageSize);
-                response.StatusCode = 200;
-                response.DisplayMessage = "Orders retrieved successfully";
-                response.Result = orders;
-                return Ok(response);
-            }
-            catch (Exception ex)
-            {
-                response.StatusCode = 500;
-                response.DisplayMessage = "An error occurred while processing the request.";
-                response.ErrorMessage = new List<string> { ex.Message };
-                return StatusCode(500, response);
-            }
+            var result = await _service.GetOrdersForCustomerAsync(customerId, page, pageSize);
+            return Ok(result);
         }
 
         [HttpPost("{customerId}/reorder/{orderId}")]
         public async Task<ActionResult<ResponseDTO<OrderDto>>> ReorderAsync(string customerId, string orderId)
         {
-            var response = new ResponseDTO<OrderDto>();
-            try
-            {
-                var order = await _service.ReorderAsync(customerId, orderId);
-                response.StatusCode = 200;
-                response.DisplayMessage = "Order reordered successfully";
-                response.Result = order;
-                return Ok(response);
-            }
-            catch (Exception ex)
-            {
-                response.StatusCode = 500;
-                response.DisplayMessage = "An error occurred while processing the request.";
-                response.ErrorMessage = new List<string> { ex.Message };
-                return StatusCode(500, response);
-            }
+            var order = await _service.ReorderAsync(customerId, orderId);
+            return Ok(order);
+            
         }
     }
 }
