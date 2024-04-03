@@ -21,7 +21,7 @@ namespace EatGoodNaija.Server.Services.Implementation
                 if (string.IsNullOrEmpty(customerId))
                 {
                     response.StatusCode = StatusCodes.Status400BadRequest;
-                    response.DisplayMessage = "Orders retrieved successfully";
+                    response.DisplayMessage = "Invalid customer ID.";
                     return response;
                 }
 
@@ -52,10 +52,10 @@ namespace EatGoodNaija.Server.Services.Implementation
             var response = new ResponseDTO<OrderDto>();
             try
             {
-                if (string.IsNullOrEmpty(customerId))
+                if (string.IsNullOrEmpty(customerId) || string.IsNullOrEmpty(orderId))
                 {
                     response.StatusCode = StatusCodes.Status400BadRequest;
-                    response.DisplayMessage = "Customer ID is required.";
+                    response.DisplayMessage = "Customer ID or Order ID is required.";
                     return response;
                 }
 
@@ -90,6 +90,8 @@ namespace EatGoodNaija.Server.Services.Implementation
             }
 
             return response;
+
+            
         }
 
     }
