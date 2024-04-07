@@ -19,30 +19,24 @@ namespace EatGoodNaija.Server.Services.Implementation
             
         }
 
-      
-        ////private readonly RoleManager<IdentityRole> _roleManager;
-        ////private readonly UserProfileCreateDTO _userProfileCreateDTO;
-        ////private readonly UserProfileUpdateDTO _userProfileUpdateDTO;
-
-        //public UserRepository(UserManager<UserProfile> usermanager /*rolemanager<identityrole> rolemanager, datacontext context, userprofilecreatedto usercreate, userprofileupdatedto userupdate*/)
-        //{
-        //    ////    _context = context;
-        //    _userManager = /*usermanager*/;
-        //    ////    //_roleManager = roleManager;
-        //    ////    //_userProfileCreateDTO = userCreate;
-        //    ////    //_userProfileUpdateDTO = userUpdate;
-
-        //}
-
         public async Task<UserProfile> GetById(int userId)
         {
             return await _context.UserProfile.FirstOrDefaultAsync(u => u.UserId == userId);
         }
 
-        public async Task UpdateProfile(UserProfileUpdateDTO user, string UserId)
+        public async Task<string> UpdateProfile(UserProfileUpdateDTO user, int UserId)
         { 
-            _context.UserProfile.Find(UserId);
+          var far = await  _context.UserProfile.FirstOrDefaultAsync(u => u.UserId == UserId);
+
+            far.FullName = user.FullName;
+            far.Email = user.Email;
+            far.PhoneNumber = user.PhoneNumber;
+            far.HomeAddress = user.HomeAddress;
+            far.City = user.City;
+
+            _context.UserProfile.Update(far);
             await _context.SaveChangesAsync();
+            return "user update sucessful";
         }
 
         public async Task<string> Add(UserProfileCreateDTO userRequest)
@@ -68,10 +62,7 @@ namespace EatGoodNaija.Server.Services.Implementation
             return "User profile added successfully";
         }
 
-        public Task UpdateProfile(UserProfile user)
-        {
-            throw new NotImplementedException();
-        }
+
 
     }
 

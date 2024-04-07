@@ -1,4 +1,5 @@
 ﻿using EatGoodNaija.Server.Data;
+using EatGoodNaija.Server.Model;
 using EatGoodNaija.Server.Model.DTO;
 using EatGoodNaija.Server.Model.DTO.profileDTO;
 using EatGoodNaija.Server.Services.Interface;
@@ -13,16 +14,14 @@ namespace EatGoodNaija.Server.Controllers
     public class ProfileController : ControllerBase
     {
         private readonly IUserRepository _userRepository;
-        private readonly DataContext _dbContext;
 
-        public ProfileController(IUserRepository userRepository, DataContext Context)
+        public ProfileController(IUserRepository userRepository)
         {
             _userRepository = userRepository;
-            _dbContext = Context;
         }
 
         [HttpGet("{userId}")]
-        public async Task<IActionResult> GetUserProfile(int userId)
+        public async Task<ActionResult<UserProfile>>  GetUserProfile(int userId)
         {
             var user = await _userRepository.GetById(userId);
             if (user == null)
@@ -32,36 +31,24 @@ namespace EatGoodNaija.Server.Controllers
             return Ok(user);
         }
 
-        [HttpPut("{userId}")]
-        public async Task<IActionResult> UpdateUserProfile(UserProfileUpdateDTO profileUpdateDTO, string userId)
+        [HttpPut("update/{userId}")]
+        public async Task<IActionResult> UpdateUserProfile(UserProfileUpdateDTO profileUpdateDTO, int userId)
         {
-            if (userId != profileUpdateDTO. Id)
-            {
-                return BadRequest("User ID mismatch");
-            }
 
             if (!ModelState.IsValid)
             {
                 return BadRequest(ModelState);
             }
 
-            var existingUser = await _userRepository.GetById(userId);
+            var existingUser = await _userRepository.UpdateProfile (profileUpdateDTO,userId);
             if (existingUser == null)
             {
-                return NotFound();
+                return BadRequest();
             }
 
-            // Update user profile properties
-            existingUser.FullName = profileUpdateDTO.FullName;
-            existingUser.Email = profileUpdateDTO.Email;
-            existingUser.PhoneNumber = profileUpdateDTO.PhoneNumber;
-            existingUser.HomeAddress = profileUpdateDTO.HomeAddress;
-            existingUser.City = profileUpdateDTO.City;
-
-            await _userRepository.UpdateProfile(profileUpdateDTO, userId);
-
-            return NoContent();
+            return Ok(existingUser);
         }
+
 
 
 
@@ -73,19 +60,10 @@ namespace EatGoodNaija.Server.Controllers
                 return BadRequest(ModelState);
             }
 
-            //// Map DTO to User entity
-            var newUser = new User
-            {
-                FullName = profileCreateDTO.FullName,
-                Email = profileCreateDTO.Email,
-                PhoneNumber = profileCreateDTO.PhoneNumber,
-                HomeAddress = profileCreateDTO.HomeAddress,
-                City = profileCreateDTO.City
-            };
+            
+           var response = await _userRepository.Add(profileCreateDTO);
 
-            await _userRepository.Add(newUser);
-
-            return CreatedAtAction(nameof(GetUserProfile), new { userId = newUser.Id }, newUser);
+            return Ok(response);
         }
     }
 }

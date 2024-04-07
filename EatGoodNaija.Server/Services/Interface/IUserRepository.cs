@@ -6,7 +6,7 @@ namespace EatGoodNaija.Server.Services.Interface
     public interface IUserRepository
     {
         Task<UserProfile> GetById(int userId);
-        Task UpdateProfile(UserProfile user);
+        Task<string> UpdateProfile(UserProfileUpdateDTO user, int UserId);
         Task<string> Add(UserProfileCreateDTO userRequest);
 
     }
