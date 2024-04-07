@@ -21,6 +21,8 @@ namespace EatGoodNaija.Server.Data
         public DbSet<FoodItem> FoodItems { get; set; }
         public DbSet<ConfirmEmailToken> ConfirmEmailTokens { get; set; }
 
+        public DbSet<UserProfile> UserProfile { get; set; }
+
 
     }
 }
