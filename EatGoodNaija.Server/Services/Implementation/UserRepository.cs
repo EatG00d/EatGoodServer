@@ -19,24 +19,30 @@ namespace EatGoodNaija.Server.Services.Implementation
             
         }
 
-        public async Task<UserProfile> GetById(int userId)
+        public async Task<UserProfile> GetById(string userId)
         {
             return await _context.UserProfile.FirstOrDefaultAsync(u => u.UserId == userId);
         }
 
-        public async Task<string> UpdateProfile(UserProfileUpdateDTO user, int UserId)
-        { 
-          var far = await  _context.UserProfile.FirstOrDefaultAsync(u => u.UserId == UserId);
+        public async Task<string> UpdateProfile(UserProfileUpdateDTO user, string userId)
+        {
+            var userProfile = await _context.UserProfile.FirstOrDefaultAsync(u => u.UserId == userId);
 
-            far.FullName = user.FullName;
-            far.Email = user.Email;
-            far.PhoneNumber = user.PhoneNumber;
-            far.HomeAddress = user.HomeAddress;
-            far.City = user.City;
+            if (userProfile == null)
+            {
+                return "User not found";
+            }
 
-            _context.UserProfile.Update(far);
+            userProfile.FullName = user.FullName;
+            userProfile.Email = user.Email;
+            userProfile.PhoneNumber = user.PhoneNumber;
+            userProfile.HomeAddress = user.HomeAddress;
+            userProfile.City = user.City;
+
+            _context.UserProfile.Update(userProfile);
             await _context.SaveChangesAsync();
-            return "user update sucessful";
+
+            return "User update successful";
         }
 
         public async Task<string> Add(UserProfileCreateDTO userRequest)

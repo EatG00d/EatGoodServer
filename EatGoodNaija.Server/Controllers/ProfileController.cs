@@ -21,7 +21,7 @@ namespace EatGoodNaija.Server.Controllers
         }
 
         [HttpGet("{userId}")]
-        public async Task<ActionResult<UserProfile>>  GetUserProfile(int userId)
+        public async Task<ActionResult<UserProfile>>  GetUserProfile(string userId)
         {
             var user = await _userRepository.GetById(userId);
             if (user == null)
@@ -32,20 +32,14 @@ namespace EatGoodNaija.Server.Controllers
         }
 
         [HttpPut("update/{userId}")]
-        public async Task<IActionResult> UpdateUserProfile(UserProfileUpdateDTO profileUpdateDTO, int userId)
+        public async Task<IActionResult> UpdateUserProfile(UserProfileUpdateDTO profileUpdateDTO, string userId)
         {
-
-            if (!ModelState.IsValid)
+            var result = await _userRepository.UpdateProfile(profileUpdateDTO, userId);
+            if (result == "User not found")
             {
-                return BadRequest(ModelState);
+                return NotFound();
             }
-
-            var existingUser = await _userRepository.UpdateProfile (profileUpdateDTO,userId);
-            if (existingUser == null)
-            {
-                return BadRequest();
-            }
-            return Ok(existingUser);
+            return Ok(result);
         }
 
 
@@ -58,8 +52,6 @@ namespace EatGoodNaija.Server.Controllers
             {
                 return BadRequest(ModelState);
             }
-
-            
            var response = await _userRepository.Add(profileCreateDTO);
 
             return Ok(response);

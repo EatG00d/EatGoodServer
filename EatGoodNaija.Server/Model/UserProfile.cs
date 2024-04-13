@@ -1,8 +1,11 @@
-﻿namespace EatGoodNaija.Server.Model
+﻿using System.ComponentModel.DataAnnotations;
+
+namespace EatGoodNaija.Server.Model
 {
     public class UserProfile
     {
-        public int UserId { get; set; }
+        [Key]
+        public string UserId { get; set; }
         public string FullName { get; set; }
         public string Email { get; set; }
         public string PhoneNumber { get; set; }
