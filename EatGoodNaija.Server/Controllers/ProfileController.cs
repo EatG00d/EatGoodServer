@@ -45,7 +45,6 @@ namespace EatGoodNaija.Server.Controllers
             {
                 return BadRequest();
             }
-
             return Ok(existingUser);
         }
 

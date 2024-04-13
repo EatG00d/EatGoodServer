@@ -58,7 +58,6 @@ namespace EatGoodNaija.Server.Services.Implementation
 
             _context.UserProfile.Add(newUserProfile);
             await _context.SaveChangesAsync();
-
             return "User profile added successfully";
         }
 
