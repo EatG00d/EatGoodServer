@@ -15,7 +15,7 @@ var builder = WebApplication.CreateBuilder(args);
 
 
 builder.Services.AddDbContext<DataContext>(
-    options => options.UseSqlServer(builder.Configuration.GetConnectionString("default"))
+    options => options.UseSqlServer(builder.Configuration.GetConnectionString("Data Source=DESKTOP-S9PIQJS\\MSSQLSERVER01;Integrated Security=True;Connect Timeout=30;Encrypt=False;Trust Server Certificate=True;Application Intent=ReadWrite;Multi Subnet Failover=False"))
 );
 
 builder.Services.AddControllers();
