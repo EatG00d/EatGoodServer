@@ -9,31 +9,55 @@ namespace EatGoodNaija.Server.Controllers
     [ApiController]
     public class CartController : ControllerBase
     {
-        private readonly ICartRepository _cartRepository;
+        private readonly IDishService _dishService;
 
-        public CartController(ICartRepository cartRepository)
+        public CartController(IDishService dishService)
         {
-            _cartRepository = cartRepository;
+            _dishService = dishService;
         }
 
-        [HttpGet]
-        public async Task<ActionResult<CustomerCart>> GetCartById(string id)
+        [HttpPost("addtocart")]
+        public async Task<ActionResult<CustomerCart>> AddToCart(CustomerCart cart)
         {
-            var cart = await _cartRepository.GetCartAsync(id);
-            return Ok(cart ?? new CustomerCart(id));
+            try
+            {
+                var addedToCart = await _dishService.AddDishToCartAsync(cart.Id);
+                return Ok(addedToCart);
+            }
+            catch (ArgumentException argex)
+            {
+                return BadRequest(argex.Message);
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(StatusCodes.Status500InternalServerError, "An error occurred.");
+            }
         }
 
-        [HttpPost]
-        public async Task<ActionResult<CustomerCart>> UpdateCart(CustomerCart cart)
+        [HttpGet("cart")]
+        public async Task<ActionResult<CustomerCart>> GetCart(string id)
         {
-            var updatedCart = await _cartRepository.UpdateCartAsync(cart);
-            return Ok(updatedCart);
+            try
+            {
+                var cartItems = await _dishService.GetCartDishAsync(id);
+                return Ok(cartItems ?? new CustomerCart(id));
+            }
+            catch (ArgumentException argex)
+            {
+                return BadRequest(argex.Message);
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(StatusCodes.Status500InternalServerError, "An error occurred.");
+            }
         }
 
-        [HttpDelete]
+      
+
+        [HttpDelete("deletefromcart")]
         public async Task DeleteCartAsync(string id)
         {
-            await _cartRepository.DeleteCartAsync(id);
+            await _dishService.DeleteDishFromCartAsync(id);
         }
     }
 }

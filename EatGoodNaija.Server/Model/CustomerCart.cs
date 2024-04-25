@@ -12,6 +12,6 @@
         }
 
         public string Id { get; set; }
-        public List<CustomerCartItem> CustomerCartItems { get; set; } = new List<CustomerCartItem>();
+        public List<CustomerCart> CustomerCarts { get; set; } = new List<CustomerCart>();
     }
 }

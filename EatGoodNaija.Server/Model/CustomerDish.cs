@@ -1,6 +1,6 @@
 ﻿namespace EatGoodNaija.Server.Model
 {
-    public class CustomerCartItem
+    public class CustomerDish
     {
         public int Id { get; set; }
         public string? ItemName { get; set; }
