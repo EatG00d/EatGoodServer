@@ -1,4 +1,6 @@
-﻿using EatGoodNaija.Server.Model.DTO.authenticationDTO;
+﻿ using EatGoodNaija.Server.Model.DTO.authenticationDTO;
+using EatGoodNaija.Server.Model.DTO.profileDTO;
+using EatGoodNaija.Server.Services.Implementation;
 using EatGoodNaija.Server.Services.Interface;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
@@ -106,6 +108,26 @@ namespace EatGoodNaija.Server.Controllers
             else
             {
                 return BadRequest(result);
+            }
+        }
+
+        [HttpPut("update-profile")]
+        public async Task<IActionResult> UpdateUserProfile(UpdateProfileDTO updateProfileDTO, string Id)
+        {
+            if (!ModelState.IsValid)
+            {
+                return BadRequest(ModelState);
+            }
+
+            var updateResult = await _authService.UpdateProfileAsync(updateProfileDTO, Id);
+
+            if (updateResult)
+            {
+                return Ok(); // Return HTTP 200 OK if the profile update was successful
+            }
+            else
+            {
+                return StatusCode(500, "Failed to update user profile"); // Return HTTP 500 Internal Server Error if the update failed
             }
         }
     }

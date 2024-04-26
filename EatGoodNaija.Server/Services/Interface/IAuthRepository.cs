@@ -1,5 +1,6 @@
 ﻿using EatGoodNaija.Server.Model;
 using EatGoodNaija.Server.Model.DTO.authenticationDTO;
+using System.Threading.Tasks;
 
 namespace EatGoodNaija.Server.Services.Interface
 {

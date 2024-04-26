@@ -2,12 +2,9 @@
 
 namespace EatGoodNaija.Server.Model.DTO.profileDTO
 {
-    public class UserProfileCreateDTO
+    public class UpdateProfileDTO
     {
-        public string FullName { get; set; }
-        [Required(ErrorMessage ="Email is Required")]
-        [EmailAddress(ErrorMessage ="Invalid Email Address")]
-        public string Email { get; set; }
+        
         [Required(ErrorMessage ="PhoneNumber is Required")]
         [Phone(ErrorMessage ="Invalid Phone Number")]
         public string PhoneNumber { get; set; }
