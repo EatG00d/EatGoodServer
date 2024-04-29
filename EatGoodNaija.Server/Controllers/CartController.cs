@@ -19,37 +19,15 @@ namespace EatGoodNaija.Server.Controllers
         [HttpPost("addtocart")]
         public async Task<ActionResult<CustomerCart>> AddToCart(CustomerCart cart)
         {
-            try
-            {
-                var addedToCart = await _dishService.AddDishToCartAsync(cart.Id);
-                return Ok(addedToCart);
-            }
-            catch (ArgumentException argex)
-            {
-                return BadRequest(argex.Message);
-            }
-            catch (Exception ex)
-            {
-                return StatusCode(StatusCodes.Status500InternalServerError, "An error occurred.");
-            }
+            var addedToCart = await _dishService.AddDishToCartAsync(cart.Id);
+            return Ok(addedToCart);
         }
 
         [HttpGet("cart")]
         public async Task<ActionResult<CustomerCart>> GetCart(string id)
         {
-            try
-            {
-                var cartItems = await _dishService.GetCartDishAsync(id);
-                return Ok(cartItems ?? new CustomerCart(id));
-            }
-            catch (ArgumentException argex)
-            {
-                return BadRequest(argex.Message);
-            }
-            catch (Exception ex)
-            {
-                return StatusCode(StatusCodes.Status500InternalServerError, "An error occurred.");
-            }
+            var cartItems = await _dishService.GetCartDishAsync(id);
+            return Ok(cartItems ?? new CustomerCart(id));
         }
 
       
