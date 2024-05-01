@@ -115,15 +115,7 @@ namespace EatGoodNaija.Server.Controllers
         public async Task<IActionResult> UpdateUserProfile(UpdateProfileDTO updateProfileDTO, string Id)
         {
             var updateResult = await _authService.UpdateProfileAsync(updateProfileDTO, Id);
-
-            if (updateResult)
-            {
-                return Ok(); // Return HTTP 200 OK if the profile update was successful
-            }
-            else
-            {
-                return StatusCode(500, "Failed to update user profile"); // Return HTTP 500 Internal Server Error if the update failed
-            }
+                return Ok(updateResult); 
         }
     }
 }
