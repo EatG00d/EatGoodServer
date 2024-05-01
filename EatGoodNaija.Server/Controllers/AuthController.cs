@@ -114,11 +114,6 @@ namespace EatGoodNaija.Server.Controllers
         [HttpPut("update-profile")]
         public async Task<IActionResult> UpdateUserProfile(UpdateProfileDTO updateProfileDTO, string Id)
         {
-            if (!ModelState.IsValid)
-            {
-                return BadRequest(ModelState);
-            }
-
             var updateResult = await _authService.UpdateProfileAsync(updateProfileDTO, Id);
 
             if (updateResult)
