@@ -1,6 +1,7 @@
 ﻿using EatGoodNaija.Server.Model;
 using EatGoodNaija.Server.Model.DTO;
 using EatGoodNaija.Server.Model.DTO.authenticationDTO;
+using EatGoodNaija.Server.Model.DTO.profileDTO;
 using EatGoodNaija.Server.Services.Interface;
 using MailKit;
 using Microsoft.AspNetCore.Identity;
@@ -14,7 +15,7 @@ namespace EatGoodNaija.Server.Services.Implementation
         private readonly ILogger<AuthService> _logger;
         private readonly RoleManager<IdentityRole> _roleManager;
         private readonly IEmailService _emailService;
-
+        private readonly UserManager<Vendor> _userManager;
         public AuthService(UserManager<Vendor> userManager,
         IJwtTokenGeneratorService tokenGeneratorService,
         IAuthRepository authRepository,
@@ -27,6 +28,7 @@ namespace EatGoodNaija.Server.Services.Implementation
             _logger = logger;
             _roleManager = roleManager;
             _emailService = emailService;
+            _userManager = userManager;
         }
         public async Task<ResponseDTO<string>> ConfirmEmailAsync(int token, string email)
         {
@@ -301,6 +303,27 @@ namespace EatGoodNaija.Server.Services.Implementation
                 response.DisplayMessage = "Error";
                 return response;
             }
+        }
+
+        public async Task<bool> UpdateProfileAsync(UpdateProfileDTO updateProfileDTO, string userId)
+        {
+            var user = await _userManager.FindByIdAsync(userId);
+            {
+                if (user == null)
+                {
+                    return false;
+                }
+            }
+
+            user.HomeAddress = updateProfileDTO.HomeAddress;
+            user.city = updateProfileDTO.City;
+            user.PhoneNumber = updateProfileDTO.PhoneNumber;
+            var updateUser = await _authRepository.UpdateUserInfo(user);
+            if (updateUser)
+            {
+                return true;
+            }
+            return false;
         }
     }
 }

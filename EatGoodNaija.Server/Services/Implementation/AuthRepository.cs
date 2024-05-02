@@ -161,7 +161,7 @@ namespace EatGoodNaija.Server.Services.Implementation
             {
                 return vendor;
             }
-            return null;
+            return null;            
         }
 
         public async Task<bool> UpdateUserInfo(Vendor applicationUser)

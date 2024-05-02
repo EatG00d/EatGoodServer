@@ -1,4 +1,6 @@
-﻿using EatGoodNaija.Server.Model.DTO.authenticationDTO;
+﻿ using EatGoodNaija.Server.Model.DTO.authenticationDTO;
+using EatGoodNaija.Server.Model.DTO.profileDTO;
+using EatGoodNaija.Server.Services.Implementation;
 using EatGoodNaija.Server.Services.Interface;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
@@ -107,6 +109,13 @@ namespace EatGoodNaija.Server.Controllers
             {
                 return BadRequest(result);
             }
+        }
+
+        [HttpPut("update-profile")]
+        public async Task<IActionResult> UpdateUserProfile(UpdateProfileDTO updateProfileDTO, string Id)
+        {
+            var updateResult = await _authService.UpdateProfileAsync(updateProfileDTO, Id);
+                return Ok(updateResult); 
         }
     }
 }

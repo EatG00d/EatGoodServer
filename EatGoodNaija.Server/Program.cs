@@ -15,7 +15,7 @@ var builder = WebApplication.CreateBuilder(args);
 // Add services to the container.
 
 builder.Services.AddDbContext<DataContext>(
-    options => options.UseSqlServer(builder.Configuration.GetConnectionString("default"))
+    options => options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection"))
 );
 builder.Services.AddSingleton<IConnectionMultiplexer>(c =>
 {
@@ -65,6 +65,7 @@ builder.Services.AddSwaggerGen(options =>
 builder.Services.AddIdentity<Vendor, IdentityRole>()
     .AddEntityFrameworkStores<DataContext>()
     .AddDefaultTokenProviders();
+
 builder.Services.AddCors(options =>
 {
     options.AddPolicy("AllowSpecificOrigin", builder =>
